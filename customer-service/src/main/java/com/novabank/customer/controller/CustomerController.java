@@ -1,11 +1,13 @@
 package com.novabank.customer.controller;
 
+import com.novabank.customer.dto.CreateCustomerRequest;
 import com.novabank.customer.dto.CustomerDTO;
 import com.novabank.customer.service.CustomerService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,11 +17,11 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/customers")
+@RequiredArgsConstructor
 @Tag(name = "Customers", description = "Gestión de clientes de NovaBank")
 public class CustomerController {
 
-    @Autowired
-    private CustomerService customerService;
+    private final CustomerService customerService;
 
     @GetMapping
     @Operation(summary = "Listar clientes", description = "Devuelve todos los clientes registrados.")
@@ -42,8 +44,8 @@ public class CustomerController {
             description = "Registra un nuevo cliente. DNI, email y teléfono deben ser únicos.")
     @ApiResponse(responseCode = "201", description = "Cliente creado correctamente")
     @ApiResponse(responseCode = "400", description = "DNI, email o teléfono ya registrado")
-    public ResponseEntity<CustomerDTO> createCustomer(@Valid @RequestBody CustomerDTO dto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(customerService.createCustomer(dto));
+    public ResponseEntity<CustomerDTO> createCustomer(@Valid @RequestBody CreateCustomerRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(customerService.createCustomer(request));
     }
 
     @GetMapping("/dni/{dni}")

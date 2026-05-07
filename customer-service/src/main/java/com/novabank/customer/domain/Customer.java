@@ -39,9 +39,6 @@ public class Customer {
     @Column(name = "creation_date")
     private LocalDateTime creationDate;
 
-    /*@OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
-    public Set<Account> accounts;*/
-
     @PrePersist
     public void prePersist() {
         this.creationDate = LocalDateTime.now();

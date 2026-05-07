@@ -2,10 +2,8 @@ package com.novabank.account.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -34,11 +32,7 @@ public class Account {
     @Column(name = "creation_date")
     private LocalDateTime creationDate;
 
-    /*@ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "customer_id")
-    private Customer customer;
-
-    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Transaction> transactions;*/
+    @Column(name = "customer_id")
+    private Long customerId;
 
 }

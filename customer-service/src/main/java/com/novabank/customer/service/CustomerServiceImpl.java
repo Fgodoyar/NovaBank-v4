@@ -1,6 +1,7 @@
 package com.novabank.customer.service;
 
 import com.novabank.customer.domain.Customer;
+import com.novabank.customer.dto.CreateCustomerRequest;
 import com.novabank.customer.dto.CustomerDTO;
 import com.novabank.customer.exception.CustomerNotFoundException;
 import com.novabank.customer.mapper.CustomerMapper;
@@ -9,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,18 +38,27 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Transactional
     @Override
-    public CustomerDTO createCustomer(CustomerDTO dto) {
+    public CustomerDTO createCustomer(CreateCustomerRequest request) {
 
-        if (customerRepository.existsByDni(dto.getDni()))
-            throw new IllegalArgumentException("Ya existe un cliente con este DNI: " + dto.getDni());
+        if (customerRepository.existsByDni(request.dni()))
+            throw new IllegalArgumentException("Ya existe un cliente con este DNI: " + request.dni());
 
-        if (customerRepository.existsByEmail(dto.getEmail()))
-            throw new IllegalArgumentException("Ya existe un cliente con este email: " + dto.getEmail());
+        if (customerRepository.existsByEmail(request.email()))
+            throw new IllegalArgumentException("Ya existe un cliente con este email: " + request.email());
 
-        if (customerRepository.existsByPhoneNumber(dto.getPhoneNumber()))
-            throw new IllegalArgumentException("Ya existe un cliente con este número de teléfono: " + dto.getPhoneNumber());
+        if (customerRepository.existsByPhoneNumber(request.phoneNumber()))
+            throw new IllegalArgumentException("Ya existe un cliente con este número de teléfono: " + request.phoneNumber());
 
-        Customer saved = customerRepository.save(customerMapper.toEntity(dto));
+        Customer customer = Customer.builder()
+                .customerName(request.customerName())
+                .lastName(request.lastName())
+                .dni(request.dni())
+                .email(request.email())
+                .phoneNumber(request.phoneNumber())
+                .creationDate(LocalDateTime.now())
+                .build();
+
+        Customer saved = customerRepository.saveAndFlush(customer);
         return customerMapper.toDTO(saved);
     }
 
