@@ -27,10 +27,10 @@ public class Customer {
     @Column(name = "last_name")
     private String lastName;
 
-    @Column
+    @Column(name = "dni")
     private String dni;
 
-    @Column
+    @Column(name = "email")
     private String email;
 
     @Column(name = "phone_number")

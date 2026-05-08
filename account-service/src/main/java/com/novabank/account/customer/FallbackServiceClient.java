@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 public class FallbackServiceClient implements CustomerServiceClient {
 
     @Override
-    public CustomerDTO getCustomer(Long id) {
-        return new CustomerDTO(id, "Cliente no disponible", "", "", "", "");
+    public CustomerDTO getCustomer(Long customerId) {
+        return new CustomerDTO(customerId, "Cliente no disponible", "", "", "", "");
     }
 }

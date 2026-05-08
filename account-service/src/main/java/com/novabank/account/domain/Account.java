@@ -26,13 +26,13 @@ public class Account {
     @Column(name = "account_holder")
     private String accountHolder;
 
-    @Column
+    @Column(name = "balance")
     private BigDecimal balance;
 
     @Column(name = "creation_date")
     private LocalDateTime creationDate;
 
-    @Column(name = "customer_id")
+    @Column(name = "customer_id", nullable = false)
     private Long customerId;
 
 }
