@@ -10,7 +10,7 @@ import com.novabank.account.exception.AccountNotFoundException;
 import com.novabank.account.exception.CustomerNotFoundException;
 import com.novabank.account.mapper.AccountMapper;
 import com.novabank.account.repository.AccountRepository;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-@Transactional
 @Service
 @RequiredArgsConstructor
 public class AccountServiceImpl implements AccountService {
@@ -28,6 +27,7 @@ public class AccountServiceImpl implements AccountService {
     private final CustomerServiceClient customerServiceClient;
     private final AccountMapper accountMapper;
 
+    @Transactional
     @Override
     public AccountDTO createAccount(CreateAccountRequest request) {
         CustomerDTO customer = customerServiceClient.getCustomer(request.customerId());
@@ -52,6 +52,7 @@ public class AccountServiceImpl implements AccountService {
         return accountMapper.toDTO(saved);
     }
 
+    @Transactional
     @Override
     public AccountDTO updateBalance(Long accountId, BigDecimal amount) {
         Account account = accountRepository.findByAccountId(accountId)
@@ -60,6 +61,7 @@ public class AccountServiceImpl implements AccountService {
         return accountMapper.toDTO(accountRepository.save(account));
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<AccountDTO> findByCustomerId(Long customerId) {
         return accountRepository.findByCustomerId(customerId).stream()
@@ -67,6 +69,7 @@ public class AccountServiceImpl implements AccountService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     @Override
     public AccountDTO findByAccountNumber(String accountNumber) {
         Account account = accountRepository.findByAccountNumber(accountNumber)
@@ -74,6 +77,7 @@ public class AccountServiceImpl implements AccountService {
         return accountMapper.toDTO(account);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<AccountDTO> findByCustomerIdWithTransactions(Long customerId) {
         return accountRepository.findByCustomerIdWithTransactions(customerId).stream()

@@ -17,6 +17,6 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
     boolean existsByCustomerId(Long customerId);
 
     // Carga cuentas con sus movimientos en una sola consulta (evita N+1)
-    @Query("SELECT a FROM Account a LEFT JOIN FETCH a.transactions WHERE a.customer.customerId = :customerId")
+    @Query("SELECT a FROM Account a LEFT JOIN FETCH a.transactions WHERE a.customerId = :customerId")
     List<Account> findByCustomerIdWithTransactions(@Param("customerId") Long customerId);
 }
