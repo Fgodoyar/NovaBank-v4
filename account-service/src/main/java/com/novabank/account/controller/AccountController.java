@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -30,6 +31,13 @@ public class AccountController {
     public ResponseEntity<AccountDTO> createAccount(@RequestBody CreateAccountRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(accountService.createAccount(request));
+    }
+
+    @PutMapping("/{accountId}/balance")
+    public ResponseEntity<AccountDTO> updateBalance(
+            @PathVariable Long accountId,
+            @RequestParam BigDecimal amount) {
+        return ResponseEntity.ok(accountService.updateBalance(accountId, amount));
     }
 
     @GetMapping("/customer/{customerId}")

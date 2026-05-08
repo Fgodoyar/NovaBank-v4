@@ -53,6 +53,14 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
+    public AccountDTO updateBalance(Long accountId, BigDecimal amount) {
+        Account account = accountRepository.findByAccountId(accountId)
+                .orElseThrow(() -> new AccountNotFoundException(accountId.toString()));
+        account.setBalance(account.getBalance().add(amount));
+        return accountMapper.toDTO(accountRepository.save(account));
+    }
+
+    @Override
     public List<AccountDTO> findByCustomerId(Long customerId) {
         return accountRepository.findByCustomerId(customerId).stream()
                 .map(accountMapper::toDTO)
