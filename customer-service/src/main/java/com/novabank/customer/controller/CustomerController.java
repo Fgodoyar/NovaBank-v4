@@ -29,6 +29,7 @@ public class CustomerController {
     @ApiResponse(responseCode = "401", description = "Unauthorized")
     public ResponseEntity<List<CustomerDTO>> listCustomers() {
         return ResponseEntity.ok(customerService.listCustomers());
+
     }
 
     @GetMapping("/{id}")
