@@ -3,6 +3,7 @@ package com.novabank.operation.service;
 
 import com.novabank.operation.customer.AccountServiceClient;
 import com.novabank.operation.dto.*;
+import com.novabank.operation.exception.AccountNotFoundException;
 import com.novabank.operation.exception.InsufficientBalanceException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,11 @@ public class OperationServiceImpl implements OperationService {
 
     @Override
     public TransactionDTO deposit(CreateOperationRequest request) {
+
+        if (request.amount().compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("El monto tiene que ser mayor que 0.");
+        }
+
         AccountDTO account = accountServiceClient.getAccountByNumber(request.accountNumber());
 
         if (request.amount().compareTo(BigDecimal.ZERO) <= 0) {
@@ -34,10 +40,15 @@ public class OperationServiceImpl implements OperationService {
 
     @Override
     public TransactionDTO withdraw(CreateOperationRequest request) {
-        AccountDTO account = accountServiceClient.getAccountByNumber(request.accountNumber());
 
         if (request.amount().compareTo(BigDecimal.ZERO) <= 0) {
             throw new IllegalArgumentException("El monto tiene que ser mayor que 0.");
+        }
+
+        AccountDTO account = accountServiceClient.getAccountByNumber(request.accountNumber());
+
+        if (account == null) {
+            throw new AccountNotFoundException(request.accountNumber());
         }
 
         if (account.balance().compareTo(request.amount()) < 0) {
@@ -46,24 +57,25 @@ public class OperationServiceImpl implements OperationService {
 
         accountServiceClient.updateBalance(account.accountId(), request.amount().negate());
 
-        return accountServiceClient.createTransaction(account.accountId(), new CreateTransactionRequest(
-                "RETIRO", request.amount(),
-                "Retiro en cuenta " + account.accountNumber()
-        ));
+        return accountServiceClient.createTransaction(
+                account.accountId(),
+                new CreateTransactionRequest("WITHDRAWAL", request.amount(),
+                        "Retiro de cuenta " + account.accountNumber()));
     }
 
     @Override
     public List<TransactionDTO> transfer(CreateTransferRequest request) {
-        AccountDTO sourceAccount = accountServiceClient.getAccountByNumber(request.fromAccountNumber());
-        AccountDTO destinationAccount = accountServiceClient.getAccountByNumber(request.toAccountNumber());
 
-        if (sourceAccount.accountNumber().equals(request.toAccountNumber())) {
+        if (request.fromAccountNumber().equals(request.toAccountNumber())) {
             throw new IllegalArgumentException("La cuenta origen no puede ser igual a la cuenta destino.");
         }
 
         if (request.amount().compareTo(BigDecimal.ZERO) <= 0) {
             throw new IllegalArgumentException("El monto tiene que ser mayor que 0.");
         }
+
+        AccountDTO sourceAccount = accountServiceClient.getAccountByNumber(request.fromAccountNumber());
+        AccountDTO destinationAccount = accountServiceClient.getAccountByNumber(request.toAccountNumber());
 
         if (sourceAccount.balance().compareTo(request.amount()) < 0) {
             throw new InsufficientBalanceException(sourceAccount.accountNumber(), sourceAccount.balance(), request.amount());
@@ -73,15 +85,14 @@ public class OperationServiceImpl implements OperationService {
         accountServiceClient.updateBalance(destinationAccount.accountId(), request.amount());
 
         TransactionDTO outgoing = accountServiceClient.createTransaction(
-                sourceAccount.accountId(), new CreateTransactionRequest(
-                        "TRANSFERENCIA_SALIENTE", request.amount(),
-                        "Transferencia saliente en cuenta " + request.fromAccountNumber())
-                );
+                sourceAccount.accountId(),
+                new CreateTransactionRequest("TRANSFER_OUT", request.amount(),
+                        "Transferencia a " + request.toAccountNumber()));
+
         TransactionDTO incoming = accountServiceClient.createTransaction(
-                destinationAccount.accountId(),  new CreateTransactionRequest(
-                        "TRANSFERENCIA_ENTRANTE", request.amount(),
-                        "Transferencia entrante en cuenta " + request.toAccountNumber())
-                );
+                destinationAccount.accountId(),
+                new CreateTransactionRequest("TRANSFER_IN", request.amount(),
+                        "Transferencia de " + request.fromAccountNumber()));
 
         return List.of(outgoing, incoming);
     }

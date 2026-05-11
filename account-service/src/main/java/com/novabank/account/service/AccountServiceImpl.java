@@ -30,9 +30,10 @@ public class AccountServiceImpl implements AccountService {
     @Transactional
     @Override
     public AccountDTO createAccount(CreateAccountRequest request) {
+
         CustomerDTO customer = customerServiceClient.getCustomer(request.customerId());
 
-        if (customer.customerName().equals("Cliente no disponible")) {
+        if (customer == null) {
             throw new CustomerNotFoundException("Cliente no encontrado con ID: " + request.customerId());
         }
 
