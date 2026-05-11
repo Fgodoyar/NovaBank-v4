@@ -1,0 +1,13 @@
+C:\Users\frang\IdeaProjects\NovaBank-v4\NovaBank-v4\auth-server\src\main\java\com\novabank\auth\AuthServerApplication.java
+C:\Users\frang\IdeaProjects\NovaBank-v4\NovaBank-v4\auth-server\src\main\java\com\novabank\auth\config\OpenApiConfig.java
+C:\Users\frang\IdeaProjects\NovaBank-v4\NovaBank-v4\auth-server\src\main\java\com\novabank\auth\config\SecurityConfig.java
+C:\Users\frang\IdeaProjects\NovaBank-v4\NovaBank-v4\auth-server\src\main\java\com\novabank\auth\controller\AuthController.java
+C:\Users\frang\IdeaProjects\NovaBank-v4\NovaBank-v4\auth-server\src\main\java\com\novabank\auth\domain\Role.java
+C:\Users\frang\IdeaProjects\NovaBank-v4\NovaBank-v4\auth-server\src\main\java\com\novabank\auth\domain\User.java
+C:\Users\frang\IdeaProjects\NovaBank-v4\NovaBank-v4\auth-server\src\main\java\com\novabank\auth\dto\LoginRequestDTO.java
+C:\Users\frang\IdeaProjects\NovaBank-v4\NovaBank-v4\auth-server\src\main\java\com\novabank\auth\dto\LoginResponseDTO.java
+C:\Users\frang\IdeaProjects\NovaBank-v4\NovaBank-v4\auth-server\src\main\java\com\novabank\auth\dto\RegisterRequest.java
+C:\Users\frang\IdeaProjects\NovaBank-v4\NovaBank-v4\auth-server\src\main\java\com\novabank\auth\exception\GlobalExceptionHandler.java
+C:\Users\frang\IdeaProjects\NovaBank-v4\NovaBank-v4\auth-server\src\main\java\com\novabank\auth\repository\UserRepository.java
+C:\Users\frang\IdeaProjects\NovaBank-v4\NovaBank-v4\auth-server\src\main\java\com\novabank\auth\service\JwtService.java
+C:\Users\frang\IdeaProjects\NovaBank-v4\NovaBank-v4\auth-server\src\main\java\com\novabank\auth\service\UserService.java
